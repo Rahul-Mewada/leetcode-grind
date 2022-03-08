@@ -20,13 +20,17 @@ class Solution:
         slow = 0
         cur_freq = {}
         max_len = 0
+        max_freq = 0
+        
         for fast in range(len(s)):
             if s[fast] in cur_freq:
                 cur_freq[s[fast]] += 1
             else:
                 cur_freq[s[fast]] = 1
             
-            while ((fast - slow + 1) - self.freq_max_repeating(cur_freq, k)) > k:
+            max_freq = max(max_freq, cur_freq[s[fast]])
+            
+            if ((fast - slow + 1) - max_freq) > k:
                 if cur_freq[s[slow]] == 1:
                     cur_freq.pop(s[slow])
                 else:
@@ -37,9 +41,3 @@ class Solution:
         return max_len
     
         
-    def freq_max_repeating(self, cur_freq, k):
-        max_freq = -float('inf')
-        for key, value in cur_freq.items():
-            max_freq = max(max_freq, value)
-        
-        return max_freq
