@@ -1,35 +1,37 @@
+import heapq
 '''
 min number of rooms
 - if two meetings don't overlap they can use the same room
 - if two meetings overlap they need 2 rooms
 
-[0, 15], [5, 10], [15, 20], [17, 30], [32, 40]
-                                        i
+[4, 9], [2, 15], [16, 23], [9, 29], [36, 45]
+                             i
 
-rooms = [8]
-min_room = 2
-Worst Case -> n^2
+[0, 30], [5, 10], [15, 20]
+            i
+
+30
+
 '''
 
 class Solution:
     def minMeetingRooms(self, intervals: List[List[int]]) -> int:
-        if len(intervals) < 2:
-            return 1
-        
+        soonest_ending = None
+        intervals.sort(key= lambda x : x[0])
         rooms = []
-        intervals.sort(key = lambda x: x[0])
-        merged = False
-        for interval in intervals:
-            start, end = interval[0], interval[1]
-            for i, meeting_end_time in enumerate(rooms):
-                if start >= meeting_end_time:
-                    rooms[i] = end
-                    merged = True
-                    break
-            
-            if not merged:
-                rooms.append(end)
-            
-            merged = False
         
+        for interval in intervals:
+            if not rooms:
+                heapq.heappush(rooms, interval[1])
+            else:
+                earliest_meeting = rooms[0]
+                if interval[0] >= earliest_meeting:
+                    heapq.heapreplace(rooms, interval[1])
+                else:
+                    heapq.heappush(rooms, interval[1])
+            
         return len(rooms)
+        
+    
+
+            
