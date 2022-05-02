@@ -7,10 +7,9 @@ dict- {
     3 : 3
 }
     
-min_h- 3 1
- 
 
 '''
+
 class Solution:
     def topKFrequent(self, nums: List[int], k: int) -> List[int]:
         num_freq = {}
@@ -20,17 +19,27 @@ class Solution:
             else:
                 num_freq[num] = 1
         
-        min_heap = []
+        freq_arr = [None] * (len(nums) + 1)
         
         for num in num_freq:
-            if len(min_heap) < k:
-                heapq.heappush(min_heap, (num_freq[num], num))
-            elif min_heap[0][0] < num_freq[num]:
-                    heapq.heapreplace(min_heap, (num_freq[num], num))
+            freq = num_freq[num]
+            if freq_arr[freq]:
+                freq_arr[freq].append(num)
+            else:
+                freq_arr[freq] = [num]
         
+        print(freq_arr)
         results = []
-        for i in range(k):
-            _, num = heapq.heappop(min_heap)
-            results.append(num)
+        
+        for i in reversed(range(len(freq_arr))):
+            if k == 0:
+                return results
+            
+            if not freq_arr[i]:
+                continue
+            
+            for nums in freq_arr[i]:
+                results.append(nums)
+                k -= 1
         
         return results
