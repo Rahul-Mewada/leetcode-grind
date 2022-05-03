@@ -1,35 +1,26 @@
 '''
-n- 1  2  3  4
-p- 1  2  6  24
-s- 24 24 12  4
+
+suf = 8
+n- 1  2  3  4  2
+p- 1  1  2  6  24
+      i
+r-       16  12  24 
 
 '''
 
 class Solution:
     def productExceptSelf(self, nums: List[int]) -> List[int]:
-        pre = [None] * len(nums)
-        suf = [None] * len(nums)
-        products = [None] * len(nums)
+        left_pro = [None] * (len(nums))
+        left_pro[0] = 1
+        
+        for i in range(1, len(nums)):
+            left_pro[i] = nums[i-1] * left_pro[i-1]
+        
+        suf = 1
 
-        for i in range(len(nums)):
-            if i == 0:
-                pre[i] = nums[i]
-            else:
-                pre[i] = nums[i] * pre[i-1]
         
-        for i in reversed(range(len(nums))):
-            if i == len(nums) - 1:
-                suf[i] = nums[i]
-            else:
-                suf[i] = nums[i] * suf[i+1]
+        for i in reversed(range(len(left_pro))):
+            left_pro[i] = left_pro[i] * suf
+            suf *= nums[i]
         
-        for i in range(len(products)):
-            if i == 0:
-                products[i] = suf[i+1]
-            elif i == len(products) - 1:
-                products[i] = pre[i-1]
-            else:
-                products[i] = suf[i+1] * pre[i-1]
-        
-        return products
-            
+        return left_pro
